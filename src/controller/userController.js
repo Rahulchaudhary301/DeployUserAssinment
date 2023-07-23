@@ -76,9 +76,9 @@ const CreateUser=async (req,res)=>{
     try{
      
       const data=req.body
-      const{email}=data
+      const{id}=data
       
-      const user = await UserSchema.findOne({email:email})
+      const user = await UserSchema.findOne({_id:id})
       res.status(200).send({ status: true, data:user})
   
     }
@@ -97,6 +97,8 @@ const CreateUser=async (req,res)=>{
       const usId=req.body.header.usId
       const data=req.body.data
       const{name,email,mobile,password,age}=data
+
+      console.log(data)
       
       const d = await UserSchema.findOne({_id:id})
       let x=d.userId
@@ -105,13 +107,19 @@ const CreateUser=async (req,res)=>{
 
 
       if( Object.keys(data).length==0) return res.status(200).send({ status: true, msg:'No Update'})
-      if(name=='') return res.status(400).send({ status: false, msg:'Nothing Update'})
-      if(age=='') return res.status(400).send({ status: false, msg:'Nothing Update'})
-      if(email=='') return res.status(400).send({ status: false, msg:'Nothing Update'})
-      if(mobile=='') return res.status(400).send({ status: false, msg:'Nothing Update'})
-      if(password=='') return res.status(400).send({ status: false, msg:'Nothing Update'})
+
+
+
+      if(name==d.name && age==d.age && mobile==d.mobile && email==d.email ) return res.status(400).send({ status: false, msg:' Nothing Update'})
+     
+    //  if(password=='') return res.status(400).send({ status: false, msg:' pas Nothing Update'})
 
        await UserSchema.findOneAndUpdate({_id:id},{$set:data},{new:true})
+
+       if(name!=d.name) return res.status(200).send({ status: true, msg:'Name update successfully'})
+      if(age!=d.age) return res.status(200).send({ status: true, msg:'Age update successfully'})
+      if(mobile!=d.mobile) return res.status(200).send({ status: true, msg:'Mobile number update successfully'})
+      if(email!=d.email) return res.status(200).send({ status: true, msg:'email update successfully'})
       
       
       res.status(200).send({ status: true, msg:"Update successfully !!!"})
